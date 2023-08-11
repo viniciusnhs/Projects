@@ -181,7 +181,7 @@ if (minuto!=tempo_min){
    /*pressure[counter] = pressao(bmp);           
    //temp[counter] = temp[counter] + counter;            
    Serial.print("Pressão ");
-   Serial.println(pressure[counter]);*/
+   Serial.println(pressure[counter]);** / 
    
     //-------------- Luminosidade------------------//
 
