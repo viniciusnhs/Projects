@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statio 01</title>
+<style>
+  /* Your existing CSS styles here */
+
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    /* Your existing media query styles here */
+  }
+</style>
+</head>
+<body>
+  <h1>Weather Station</h1>
+  <table>
+    <tr>
+      <td class="image-cell">
+        <img src='termometro.png' alt="Weather Image" width="80">
+      </td>
+      <td class="image-cell">
+        <img src='wifi.png' alt="WiFi" width="80">
+      </td>
+      <td class="image-cell">
+        <img src='wifilevel.png' alt="WiFi Level" width="80">
+      </td>
+      <td class="image-cell">
+        <img src='additional-icon.png' alt="Additional Info" width="80">
+      </td>
+    </tr>
+    <tr>
+      <td class="image-cell">
+        <div class="value-row"><span id='temp1'>-</span></div>
+      </td>
+      <td class="image-cell">
+        <div class="value-row"><span id='wifi'>-</span></div>
+      </td>
+      <td class="image-cell">
+        <div class="value-row"><span id='wifilevel'>-</span></div>
+      </td>
+      <td class="image-cell">
+        <div class="value-row"><span id='additionalInfo'>-</span></div>
+      </td>
+    </tr>
+  </table>
+  
+  <div class="button-container">
+    <button id="restart">Restart ESP</button>
+  </div>
+</body>
+
+<script>
+  var Socket;
+  document.getElementById('restart').addEventListener('click', button_send_back);
+  function init() {
+    Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+    Socket.onmessage = function(event) {
+      processCommand(event);
+    };
+  }
+
+  function button_send_back() {
+    var msg = {status: 1};
+    Socket.send(JSON.stringify(msg));
+  }
+  
+  function processCommand(event) {
+    var obj = JSON.parse(event.data);
+  
+    // Arredondar o valor para duas casas decimais
+    var roundedTemp = parseFloat(obj.temp1).toFixed(2);
+    document.getElementById('temp1').innerHTML = roundedTemp;
+    document.getElementById('wifi').innerHTML = obj.wifi;
+    document.getElementById('wifilevel').innerHTML = obj.wifilevel;
+    document.getElementById('additionalInfo').innerHTML = obj.additionalInfo;
+    console.log(roundedTemp);
+    console.log(obj.wifi);
+    console.log(obj.wifilevel);
+    console.log(obj.additionalInfo);
+  }
+  
+  window.onload = function(event) {
+    init();
+  }
+</script>
+</html>

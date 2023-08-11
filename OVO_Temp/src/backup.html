@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statio 01</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    margin-top: 20px;
+  }
+  table {
+    max-width: 100%;
+    width: auto;
+    border-collapse: collapse;
+    margin: 0 auto;
+  }
+  th, td {
+    padding: 8px;
+    border: 1px solid black;
+  }
+  .image-cell {
+    text-align: center;
+  }
+  .value-row {
+    margin-top: 3px;
+  }
+  .button-container {
+    margin-top: 20px;
+  }
+  #refreshButton {
+    background-color: rgb(239, 239, 239);
+  }
+
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    h1 {
+      margin-top: 10px;
+      font-size: 24px;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Weather Station</h1>
+  <table>
+    <tr>
+      <td class="image-cell">
+        <img src='termometro.png' alt="Weather Image" width="80">
+      </td>
+      <td class="image-cell">
+        <img src='wifi.png' alt="WiFi" width="80">
+      </td>
+      <td class="image-cell">
+        <img src='wifilevel.png' alt="WiFi Level" width="80">
+      </td>
+    </tr>
+    <tr>
+      <td class="image-cell">
+        <div class="value-row"><span id='temp1'>-</span></div>
+      </td>
+      <td class="image-cell">
+        <div class="value-row"><span id='wifi'>-</span></div>
+      </td>
+      <td class="image-cell">
+        <div class="value-row"><span id='wifilevel'>-</span></div>
+      </td>
+    </tr>
+  </table>
+  
+  <div class="button-container">
+    <button id="restart">Restart ESP</button>
+  </div>
+</body>
+
+<script>
+  var Socket;
+  document.getElementById('restart').addEventListener('click', button_send_back);
+  function init() {
+    Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+    Socket.onmessage = function(event) {
+      processCommand(event);
+    };
+  }
+
+  function button_send_back() {
+    var msg = {status: 1};
+	Socket.send(JSON.stringify(msg));
+  }
+  
+  function processCommand(event) {
+    var obj = JSON.parse(event.data);
+  
+    // Arredondar o valor para duas casas decimais
+    var roundedTemp = parseFloat(obj.temp1).toFixed(2);
+    document.getElementById('temp1').innerHTML = roundedTemp;
+    document.getElementById('wifi').innerHTML = obj.wifi;
+    document.getElementById('wifilevel').innerHTML = obj.wifilevel;
+    console.log(roundedTemp);
+    console.log(obj.wifi);
+    console.log(obj.wifilevel);
+  }
+  
+  window.onload = function(event) {
+    init();
+  }
+</script>
+</html>
