@@ -47,7 +47,7 @@ DHT dht(DHTPIN, DHTTYPE,20);
 
 //BH1750 lightMeter; //CRIA UMA INSTÂNCIA
 
-//---------- Definindo RTC    -------------------
+//---------- Definindo RTC  Marcio e foda  -------------------
 
 //RTC_DS3231 rtc;
 int dia;
