@@ -58,6 +58,8 @@ char tempo_RTC[15];
 String hora_ntp;
 String data_ntp;
 
+// Matheus é maluco e bateu com o carro
+
 //--------- Variáveis Globas ----------//
 
 int minuto = 0;
